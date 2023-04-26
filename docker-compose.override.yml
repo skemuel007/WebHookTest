@@ -4,20 +4,65 @@ services:
   airlineapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+      # - ASPNETCORE_URLS=https://+:443;http://+:80
+      - "ConnectionStrings:AirlineDBContext=Server=mssql;Database=ArlineDB;User Id=sa;Password=webhook123456"
     ports:
-      - "80"
-      - "443"
+      - "7000:80"
+      # - "443"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - webhooks
+    depends_on:
+      - mssql
+
   travelagentapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+      # - ASPNETCORE_URLS=https://+:443;http://+:80
     ports:
-      - "80"
-      - "443"
+      - "7003:80"
+      # - "443"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - webhooks
+  
+  rabbitmq:
+    # hostname: "rabbitmq"
+    container_name: "rabbitmq"
+    # restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq/
+      # - "~/rabbitmq/data/:var/lib/rabbitmq/mnesia/"
+      # - webhook_data:/var/lib/rabbitmq/mnesia
+    networks:
+      - webhooks
+
+  mssql:
+    restart: always
+    ports:
+      - "1434:1433"
+    environment:
+      MSSQL_SA_PASSWORD: "webhook123456"
+      MSSQL_PID: "Developer"
+      MSSQL_USER: "SA"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - webhook_mssql_data:/var/opt/mssql
+    networks:
+      - webhooks
+
+volumes:
+  webhook_mssql_data:
+  # webhook_data:
+
+networks:
+  webhooks:
+    driver: bridge
