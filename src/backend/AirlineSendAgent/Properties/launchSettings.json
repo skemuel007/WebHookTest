@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "AirlineSendAgent": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

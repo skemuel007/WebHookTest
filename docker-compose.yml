@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  airlineapi:
+    image: ${DOCKER_REGISTRY-}airlineapi
+    build:
+      context: .
+      dockerfile: src/backend/AirlineAPI/Dockerfile
+
+  airlinesendagent:
+    image: ${DOCKER_REGISTRY-}airlinesendagent
+    build:
+      context: .
+      dockerfile: src/backend/AirlineSendAgent/Dockerfile
+
+
+  travelagentapi:
+    image: ${DOCKER_REGISTRY-}travelagentapi
+    build:
+      context: .
+      dockerfile: src/backend/TravelAgentAPI/Dockerfile
+
