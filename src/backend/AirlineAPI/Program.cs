@@ -1,4 +1,9 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using AirlineAPI.Data;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<AirlineDBContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AirlineDBContext") ?? throw new InvalidOperationException("Connection string 'AirlineDBContext' not found.")));
 
 // Add services to the container.
 
