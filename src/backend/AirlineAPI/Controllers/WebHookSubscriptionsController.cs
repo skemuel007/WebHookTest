@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AirlineAPI.Models;
 using AirlineAPI.Data;
+using AirlineAPI.Dtos;
+using AutoMapper;
 
 namespace AirlineAPI.Controllers
 {
@@ -15,31 +17,31 @@ namespace AirlineAPI.Controllers
     public class WebHookSubscriptionsController : ControllerBase
     {
         private readonly AirlineDBContext _context;
+        private readonly IMapper _mapper;
 
-        public WebHookSubscriptionsController(AirlineDBContext context)
+        public WebHookSubscriptionsController(AirlineDBContext context,
+            IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/WebHookSubscriptions
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<WebHookSubscription>>> GetWebHookSubscription()
+        public async Task<ActionResult<IEnumerable<WebHookSubscriptionResponsDto>>> GetWebHookSubscription()
         {
             if (_context.WebHookSubscription == null)
             {
                 return NotFound();
             }
-            return await _context.WebHookSubscription.ToListAsync();
+            var result =  await _context.WebHookSubscription.ToListAsync();
+            
+            return _mapper.Map<List<WebHookSubscriptionResponsDto>>(result);
         }
 
-        // GET: api/WebHookSubscriptions/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<WebHookSubscription>> GetWebHookSubscription(int id)
+        public async Task<ActionResult<WebHookSubscriptionResponsDto>> GetWebHookSubscription(int id)
         {
-            if (_context.WebHookSubscription == null)
-            {
-                return NotFound();
-            }
             var webHookSubscription = await _context.WebHookSubscription.FindAsync(id);
 
             if (webHookSubscription == null)
@@ -47,53 +49,54 @@ namespace AirlineAPI.Controllers
                 return NotFound();
             }
 
-            return webHookSubscription;
+            return Ok(_mapper.Map<WebHookSubscriptionResponsDto>(webHookSubscription));
         }
 
-        // PUT: api/WebHookSubscriptions/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutWebHookSubscription(int id, WebHookSubscription webHookSubscription)
-        {
-            if (id != webHookSubscription.Id)
-            {
-                return BadRequest();
-            }
 
-            _context.Entry(webHookSubscription).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!WebHookSubscriptionExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/WebHookSubscriptions
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<WebHookSubscription>> PostWebHookSubscription(WebHookSubscription webHookSubscription)
+        public async Task<ActionResult<WebHookSubscriptionResponsDto>> CreateWebHookSubscription(WebHookSubscriptionCreateDto webHookSubscriptionCreateDto)
         {
-            if (_context.WebHookSubscription == null)
-            {
-                return Problem("Entity set 'AirlineDBContext.WebHookSubscription'  is null.");
-            }
-            _context.WebHookSubscription.Add(webHookSubscription);
-            await _context.SaveChangesAsync();
+            var subscription = _context.WebHookSubscription.FirstOrDefault(s => s.WebHookUri ==  webHookSubscriptionCreateDto.WebhookUri);
 
-            return CreatedAtAction("GetWebHookSubscription", new { id = webHookSubscription.Id }, webHookSubscription);
+            if (subscription is null)
+            {
+                subscription = _mapper.Map<WebHookSubscription>(webHookSubscriptionCreateDto);
+                subscription.Secret = Guid.NewGuid().ToString();
+                subscription.WebHookPublisher = "PanAus";
+
+                try
+                {
+                    _context.WebHookSubscription.Add(subscription);
+                    await _context.SaveChangesAsync();
+
+                } catch(Exception ex)
+                {
+                    return Problem("Error creating webhook subscription");
+                }
+
+                var webHookSubscriptionResponseDto = _mapper.Map<WebHookSubscriptionResponsDto>(subscription);
+
+                return CreatedAtRoute(nameof(GetSubscriptionBySecret), new { secret = webHookSubscriptionResponseDto.Secret }, webHookSubscriptionResponseDto);
+
+            } else
+            {
+                return Problem("Webhook already registered");
+            }
+
+            
+        }
+
+        [HttpGet("{secret}", Name = "GetSubscriptionBySecret")]
+        public async Task<ActionResult<WebHookSubscriptionResponsDto>> GetSubscriptionBySecret(string secret)
+        {
+            var subscription = await _context.WebHookSubscription.FirstOrDefaultAsync(s => s.Secret == secret);
+
+            if (subscription == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(_mapper.Map<WebHookSubscriptionResponsDto>(subscription));
         }
 
         // DELETE: api/WebHookSubscriptions/5
@@ -114,11 +117,6 @@ namespace AirlineAPI.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool WebHookSubscriptionExists(int id)
-        {
-            return (_context.WebHookSubscription?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

@@ -1,11 +1,29 @@
 version: '3.4'
 
 services:
+
+  webfront:
+    build: ./src/frontend/webhookregfront/
+       # context: . 
+       # dockerfile: ./src/frontend/webhookregfront/Dockerfile
+    environment:
+      - BASE_URL=http://airlineapi:7000/api
+    depends_on:
+      - airlineapi
+    ports:
+      - '4200:80'
+    networks:
+      - webhooks
+
   airlineapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       # - ASPNETCORE_URLS=https://+:443;http://+:80
-      - "ConnectionStrings:AirlineDBContext=Server=mssql;Database=ArlineDB;User Id=sa;Password=webhook123456"
+      - "Serilog:MinimumLevel:Default=Information"
+      - "Serilog:MinimumLevel:Override:System=Warning"
+      - "Serilog:MinimumLevel:Override:Microsoft=Information"
+      - "ConnectionStrings:AirlineDBContext=Server=mssql;Database=ArlineDB;User Id=sa;Password=webhook123456;"
+      - "ElasticConfiguration:Uri=http://elasticsearch:9200"
     ports:
       - "7000:80"
       # - "443"
@@ -16,6 +34,8 @@ services:
       - webhooks
     depends_on:
       - mssql
+      - elasticsearch
+      - kibana
 
   travelagentapi:
     environment:
@@ -59,8 +79,36 @@ services:
     networks:
       - webhooks
 
+  elasticsearch:
+    container_name: elasticsearch
+    environment:
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - "discovery.type=single-node"
+    ports:
+      - target: 9200
+        published: 9200
+    volumes:
+      - w-elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - webhooks
+
+  kibana:
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    ports:
+      - target: 5601
+        published: 5601
+    networks:
+      - webhooks
+  
+
 volumes:
   webhook_mssql_data:
+  w-elasticsearch-data:
   # webhook_data:
 
 networks:

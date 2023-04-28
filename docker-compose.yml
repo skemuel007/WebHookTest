@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.9'
 
 services:
   airlineapi:
@@ -27,3 +27,9 @@ services:
   mssql:
     image: mcr.microsoft.com/mssql/server:2019-latest
     container_name: webhookmssql
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.5.3
+  
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.5.3

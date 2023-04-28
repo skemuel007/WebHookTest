@@ -1,0 +1,6 @@
+{
+  "apiUrl": {
+    "baseUrl": "${BASE_URL}",
+    "version": "v1"
+  }
+}
