@@ -41,6 +41,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       # - ASPNETCORE_URLS=https://+:443;http://+:80
+      - "Serilog:MinimumLevel:Default=Information"
+      - "Serilog:MinimumLevel:Override:System=Warning"
+      - "Serilog:MinimumLevel:Override:Microsoft=Information"
+      - "ConnectionStrings:TravelAgentDbContext=Server=mssql;Database=TravelAgentDB;User Id=sa;Password=webhook123456;"
+      - "ElasticConfiguration:Uri=http://elasticsearch:9200"
     ports:
       - "7003:80"
       # - "443"

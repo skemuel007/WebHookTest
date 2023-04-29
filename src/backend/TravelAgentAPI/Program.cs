@@ -1,4 +1,17 @@
+using AirlineAPI.Extensions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Shared;
+using Serilog;
+using TravelAgentAPI.Data;
+
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog(SeriLogger.Configure);
+
+builder.Services.AddDbContext<TravelAgentDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("TravelAgentDbContext") ?? throw new InvalidOperationException("Connection string 'TravelAgentDbContext' not found.")));
 
 // Add services to the container.
 
@@ -22,4 +35,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+app.MigrateDatabase<TravelAgentDbContext>((context, services) =>
+{
+
+}).Run();
