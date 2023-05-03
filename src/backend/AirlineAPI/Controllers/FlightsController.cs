@@ -1,5 +1,6 @@
 ﻿using AirlineAPI.Data;
 using AirlineAPI.Dtos;
+using AirlineAPI.MessageBus;
 using AirlineAPI.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -13,10 +14,16 @@ namespace AirlineAPI.Controllers
     {
         private readonly AirlineDBContext _dbContext;
         private readonly IMapper _mapper;
-        public FlightsController(AirlineDBContext dbContext, IMapper mapper)
+        private readonly IMessageBusClient _messageBusClient;
+        private readonly ILogger<FlightsController> _logger;
+        public FlightsController(AirlineDBContext dbContext, IMapper mapper,
+            IMessageBusClient messageBusClient,
+            ILogger<FlightsController> logger)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _messageBusClient = messageBusClient;
+            _logger = logger;
         }
 
         [HttpGet("{flightCode}", Name = "GetFlightDetailsByCode")]
@@ -69,9 +76,35 @@ namespace AirlineAPI.Controllers
                 return NotFound();
             }
 
+            decimal oldPrice = flight.Price;
             _mapper.Map(flightDetailsForUpdateDto, flight);
 
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+                if (oldPrice != flight.Price)
+                {
+                    _logger.LogInformation("Price changed - Message pushed to service bus");
+                    var message = new NotificationMessageDto
+                    {
+                        WebhookType = "pricechange",
+                        OldPrice = oldPrice,
+                        NewPrice = flight.Price,
+                        FlightCode = flight.FlightCode
+                    };
+                    _messageBusClient.SendMessage(message);
+
+                } else
+                {
+                    _logger.LogInformation("No price changed");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            
 
             return NoContent();
         }

@@ -3,6 +3,8 @@ using AirlineAPI.Data;
 using AirlineAPI.Extensions;
 using Shared;
 using Serilog;
+using AirlineAPI.MessageBus;
+using AirlineAPI.Configs;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,10 @@ builder.Host.UseSerilog(SeriLogger.Configure);
 builder.Services.AddDbContext<AirlineDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AirlineDBContext") 
     ?? throw new InvalidOperationException("Connection string 'AirlineDBContext' not found.")));
+
+builder.Services.Configure<RabbitMQConfig>(builder.Configuration.GetSection("RabbitMQ"));
+
+builder.Services.AddSingleton<IMessageBusClient, MessageBusClient>();
 
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

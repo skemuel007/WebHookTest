@@ -21,7 +21,9 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{E935B4A8-14A3-4469-8520-53559492534B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "src\common\Shared\Shared.csproj", "{BF1740B2-1E34-44B9-AB30-C20D8B4FBBDF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "src\common\Shared\Shared.csproj", "{BF1740B2-1E34-44B9-AB30-C20D8B4FBBDF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineSendAgentWorker", "src\backend\AirlineSendAgentWorker\AirlineSendAgentWorker.csproj", "{3428B954-16B5-480F-AE37-DAD9EBB35FB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,10 @@ Global
 		{BF1740B2-1E34-44B9-AB30-C20D8B4FBBDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF1740B2-1E34-44B9-AB30-C20D8B4FBBDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF1740B2-1E34-44B9-AB30-C20D8B4FBBDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3428B954-16B5-480F-AE37-DAD9EBB35FB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3428B954-16B5-480F-AE37-DAD9EBB35FB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3428B954-16B5-480F-AE37-DAD9EBB35FB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3428B954-16B5-480F-AE37-DAD9EBB35FB9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,6 +74,7 @@ Global
 		{3373FC40-755A-4A87-9CEE-F7E7A9531118} = {6A563C40-3C18-48F4-9CC0-851E09C8FEBB}
 		{E935B4A8-14A3-4469-8520-53559492534B} = {9AF7991E-81B6-4627-8341-84936EA6125B}
 		{BF1740B2-1E34-44B9-AB30-C20D8B4FBBDF} = {E935B4A8-14A3-4469-8520-53559492534B}
+		{3428B954-16B5-480F-AE37-DAD9EBB35FB9} = {6A563C40-3C18-48F4-9CC0-851E09C8FEBB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC439EEE-07C4-4ED4-B8A6-E21A471A3709}

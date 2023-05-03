@@ -24,6 +24,9 @@ services:
       - "Serilog:MinimumLevel:Override:Microsoft=Information"
       - "ConnectionStrings:AirlineDBContext=Server=mssql;Database=ArlineDB;User Id=sa;Password=webhook123456;"
       - "ElasticConfiguration:Uri=http://elasticsearch:9200"
+      - "RabbitMQ:Port=5672"
+      - "RabbitMQ:Host=rabbitmq"
+      - "RabbitMQ:Exchange=trigger"
     ports:
       - "7000:80"
       # - "443"
@@ -46,6 +49,9 @@ services:
       - "Serilog:MinimumLevel:Override:Microsoft=Information"
       - "ConnectionStrings:TravelAgentDbContext=Server=mssql;Database=TravelAgentDB;User Id=sa;Password=webhook123456;"
       - "ElasticConfiguration:Uri=http://elasticsearch:9200"
+      - "RabbitMQ:Port=5672"
+      - "RabbitMQ:Host=rabbitmq"
+      - "RabbitMQ:Exchange=trigger"
     ports:
       - "7003:80"
       # - "443"
@@ -54,6 +60,32 @@ services:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
     networks:
       - webhooks
+    depends_on:
+      - mssql
+      - elasticsearch
+      - kibana
+
+  airlinesendagent:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      # - ASPNETCORE_URLS=https://+:443;http://+:80
+      - "Serilog:MinimumLevel:Default=Information"
+      - "Serilog:MinimumLevel:Override:System=Warning"
+      - "Serilog:MinimumLevel:Override:Microsoft=Information"
+      - "ConnectionStrings:SendAgentConnection=Server=mssql;Database=ArlineDB;User Id=sa;Password=webhook123456;"
+      - "ElasticConfiguration:Uri=http://elasticsearch:9200"
+      - "RabbitMQ:Port=5672"
+      - "RabbitMQ:Host=rabbitmq"
+      - "RabbitMQ:Exchange=trigger"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - webhooks
+    depends_on:
+      - mssql
+      - elasticsearch
+      - kibana
   
   rabbitmq:
     # hostname: "rabbitmq"
