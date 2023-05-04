@@ -83,8 +83,9 @@ docker-compose -f docker-compose.yml -f docker-compose-override.yml up -d
 
 ![Docker containers](docker_containers.png)
 
+![Frontend](frontend.png)
 
-
+* **Frontend URL -> [http://localhost:4200](http://localhost:4200)**
 
 ## Author
 
