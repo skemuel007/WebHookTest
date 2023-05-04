@@ -8,7 +8,6 @@ When the wehbook is setup the application sends the notication ("The Sender") in
 
 ## High Level Architecture
 
-![ELK Stack](ELK.png)
 ![Webook Architecture - Copied](Webhook%20Architecture.png)
 
 ### System Requirements
@@ -65,7 +64,27 @@ docker-compose -f docker-compose.yml -f docker-compose-override.yml up -d
 
 * ** RabbitMQ -> [http://localhost:15672](http://localhost:15672) **username** and **password** = **"guest"**
 
+![ELK Stack](ELK.png) 
+![ElasticSearch](Elasticsearch.png)
+
+* **Elk Stack => Kibana URL-> [http://localhost:5601](http://localhost:5601) ,Elastic URL [http://localhost:9200](http://localhost:5601) and Logstash URL [http://localhost:9600](http://localhost:9600)**
+
 ![RabbitMQ](RabbitMQ.png)
+
+* **RabbitMQ URL -> [http://localhost:5601/swagger](http://localhost:5601/swagger)**
+
+![AirlineAPI](airline_api.png)
+
+* **AirlineAPI URL -> [http://localhost:7000/swagger](http://localhost:7000/swagger)**
+
+![TravelAgentAPI](travel_agent.png)
+
+* **TravelAgentAPI URL -> [http://localhost:7003/swagger](http://localhost:7003/swagger)**
+
+![Docker containers](docker_containers.png)
+
+
+
 
 ## Author
 
