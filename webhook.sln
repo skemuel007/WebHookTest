@@ -9,15 +9,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "frontend", "frontend", "{06
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "backend", "{6A563C40-3C18-48F4-9CC0-851E09C8FEBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineAPI", "src\backend\AirlineAPI\AirlineAPI.csproj", "{2343E9B4-E904-4AA7-87A3-4535C258EE65}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirlineAPI", "src\backend\AirlineAPI\AirlineAPI.csproj", "{2343E9B4-E904-4AA7-87A3-4535C258EE65}"
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "webhookregfront", "src\frontend\webhookregfront\webhookregfront.esproj", "{67E344FC-53AE-4731-8B66-4E24581E9B35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineSendAgent", "src\backend\AirlineSendAgent\AirlineSendAgent.csproj", "{4A0F1ECC-3E21-4921-A84B-4BFF8C840EBB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirlineSendAgent", "src\backend\AirlineSendAgent\AirlineSendAgent.csproj", "{4A0F1ECC-3E21-4921-A84B-4BFF8C840EBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TravelAgentAPI", "src\backend\TravelAgentAPI\TravelAgentAPI.csproj", "{3373FC40-755A-4A87-9CEE-F7E7A9531118}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TravelAgentAPI", "src\backend\TravelAgentAPI\TravelAgentAPI.csproj", "{3373FC40-755A-4A87-9CEE-F7E7A9531118}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{331EA9AA-67D7-48F2-B1EA-EA99E8A7A4C4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{E935B4A8-14A3-4469-8520-53559492534B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "src\common\Shared\Shared.csproj", "{BF1740B2-1E34-44B9-AB30-C20D8B4FBBDF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineSendAgentWorker", "src\backend\AirlineSendAgentWorker\AirlineSendAgentWorker.csproj", "{3428B954-16B5-480F-AE37-DAD9EBB35FB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +53,14 @@ Global
 		{331EA9AA-67D7-48F2-B1EA-EA99E8A7A4C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{331EA9AA-67D7-48F2-B1EA-EA99E8A7A4C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{331EA9AA-67D7-48F2-B1EA-EA99E8A7A4C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF1740B2-1E34-44B9-AB30-C20D8B4FBBDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF1740B2-1E34-44B9-AB30-C20D8B4FBBDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF1740B2-1E34-44B9-AB30-C20D8B4FBBDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF1740B2-1E34-44B9-AB30-C20D8B4FBBDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3428B954-16B5-480F-AE37-DAD9EBB35FB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3428B954-16B5-480F-AE37-DAD9EBB35FB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3428B954-16B5-480F-AE37-DAD9EBB35FB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3428B954-16B5-480F-AE37-DAD9EBB35FB9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,6 +72,9 @@ Global
 		{67E344FC-53AE-4731-8B66-4E24581E9B35} = {067BDE13-F05A-41CF-8DF3-5B3C21A74952}
 		{4A0F1ECC-3E21-4921-A84B-4BFF8C840EBB} = {6A563C40-3C18-48F4-9CC0-851E09C8FEBB}
 		{3373FC40-755A-4A87-9CEE-F7E7A9531118} = {6A563C40-3C18-48F4-9CC0-851E09C8FEBB}
+		{E935B4A8-14A3-4469-8520-53559492534B} = {9AF7991E-81B6-4627-8341-84936EA6125B}
+		{BF1740B2-1E34-44B9-AB30-C20D8B4FBBDF} = {E935B4A8-14A3-4469-8520-53559492534B}
+		{3428B954-16B5-480F-AE37-DAD9EBB35FB9} = {6A563C40-3C18-48F4-9CC0-851E09C8FEBB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC439EEE-07C4-4ED4-B8A6-E21A471A3709}

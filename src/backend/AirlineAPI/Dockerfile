@@ -8,6 +8,7 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["src/backend/AirlineAPI/AirlineAPI.csproj", "src/backend/AirlineAPI/"]
+COPY ["src/common/Shared/Shared.csproj", "src/common/Shared/"]
 RUN dotnet restore "src/backend/AirlineAPI/AirlineAPI.csproj"
 COPY . .
 WORKDIR "/src/src/backend/AirlineAPI"

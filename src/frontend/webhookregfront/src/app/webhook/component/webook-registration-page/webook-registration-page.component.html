@@ -1,0 +1,50 @@
+<div class="container">
+  <!--######################## START ######################-->
+  <h1 class="display-3 text-center my-4">Pan Australia Airways</h1>
+  <h1 class="display-5 text-center my-4">Webhook Registration</h1>
+
+  <div *ngIf="webhookData !== undefined" class="alert alert-success" role="alert">
+    <h4 class="alert-heading">Success</h4>
+    <p>Webhook Registered please use secret {{webhookData.secret}} to validate inbound request</p>
+  </div>
+
+  <div id="registration">
+    <form [formGroup]="webhookFormGroup" (ngSubmit)="submit()">
+      <div class="form-group">
+        <label for="webhookUri">Enter your webhook URI</label>
+        <input class="form-control form-control-lg" formControlName="webhookUri" type="text" id="webhookUri" placeholder="Enter URI">
+        <div *ngIf="(webhookFormGroup.get('webhookUri')?.dirty || webhookFormGroup.get('webhookUri')?.touched) && webhookFormGroup.get('webhookUri')?.errors" class="alert alert-danger">
+          <div *ngIf="webhookFormGroup.get('webhookUri')?.hasError('required')">
+            Uri is required
+          </div>
+        </div>
+        <small class="form-text text-muted">Your webhook URI will not be shared</small>
+      </div>
+
+      <div class="form-group">
+        <label for="webhookType">Webhook Type</label>
+        <select class="form-control" id="webhookType" formControlName="webhookType">
+          <option [selected]="true" [value]="priceChange">Price Change</option>
+          <option [value]="seatAvailability">Seat Availability</option>
+          <option [value]="flightDelayDisruption">Flight Delays & Disruption</option>
+        </select>
+        <div *ngIf="(webhookFormGroup.get('webhookType')?.dirty || webhookFormGroup.get('webhookType')?.touched)
+                && webhookFormGroup.get('webhookType')?.errors" class="alert alert-danger">
+          <div *ngIf="webhookFormGroup?.get('webhookType')?.hasError('required')">
+            Webhook type is required
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <button class="btn btn-primary btn-block" [disabled]="!webhookFormGroup.valid || loading">
+          <span *ngIf="!loading">Register</span>
+          <div *ngIf="loading" class="spinner-border text-light" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+

@@ -1,11 +1,34 @@
 version: '3.4'
 
 services:
+
+  webfront:
+    # build: ./src/frontend/webhookregfront/
+    # build: #./src/frontend/webhookregfront/
+       # context: . 
+       # dockerfile: ./src/frontend/webhookregfront/Dockerfile
+    environment:
+      - BASE_URL=http://airlineapi:7000/api
+    depends_on:
+      - airlineapi
+    ports:
+      - '4200:80'
+    networks:
+      - webhooks
+
   airlineapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       # - ASPNETCORE_URLS=https://+:443;http://+:80
-      - "ConnectionStrings:AirlineDBContext=Server=mssql;Database=ArlineDB;User Id=sa;Password=webhook123456"
+      - "Serilog:MinimumLevel:Default=Information"
+      - "Serilog:MinimumLevel:Override:System=Warning"
+      - "Serilog:MinimumLevel:Override:Microsoft=Information"
+      - "ConnectionStrings:AirlineDBContext=Server=mssql;Database=ArlineDB;User Id=sa;Password=webhook123456;"
+      - "ElasticConfiguration:Uri=http://elasticsearch:9200"
+      - "RabbitMQ:Port=5672"
+      - "RabbitMQ:Host=rabbitmq"
+      - "RabbitMQ:Exchange=trigger"
+      - "App:Name=AirlineAPI"
     ports:
       - "7000:80"
       # - "443"
@@ -16,11 +39,23 @@ services:
       - webhooks
     depends_on:
       - mssql
+      - elasticsearch
+      - kibana
+      - rabbitmq
 
   travelagentapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       # - ASPNETCORE_URLS=https://+:443;http://+:80
+      - "Serilog:MinimumLevel:Default=Information"
+      - "Serilog:MinimumLevel:Override:System=Warning"
+      - "Serilog:MinimumLevel:Override:Microsoft=Information"
+      - "ConnectionStrings:TravelAgentDbContext=Server=mssql;Database=TravelAgentDB;User Id=sa;Password=webhook123456;"
+      - "ElasticConfiguration:Uri=http://elasticsearch:9200"
+      - "RabbitMQ:Port=5672"
+      - "RabbitMQ:Host=rabbitmq"
+      - "RabbitMQ:Exchange=trigger"
+      - "App:Name=TravelAgentAPI"
     ports:
       - "7003:80"
       # - "443"
@@ -29,6 +64,35 @@ services:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
     networks:
       - webhooks
+    depends_on:
+      - mssql
+      - elasticsearch
+      - kibana
+      - rabbitmq
+
+  airlinesendagent:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      # - ASPNETCORE_URLS=https://+:443;http://+:80
+      - "Serilog:MinimumLevel:Default=Information"
+      - "Serilog:MinimumLevel:Override:System=Warning"
+      - "Serilog:MinimumLevel:Override:Microsoft=Information"
+      - "ConnectionStrings:SendAgentConnection=Server=mssql;Database=ArlineDB;User Id=sa;Password=webhook123456;"
+      - "ElasticConfiguration:Uri=http://elasticsearch:9200"
+      - "RabbitMQ:Port=5672"
+      - "RabbitMQ:Host=rabbitmq"
+      - "RabbitMQ:Exchange=trigger"
+      - "App:Name=SendAgentWorker"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - webhooks
+    depends_on:
+      - mssql
+      - elasticsearch
+      - kibana
+      - rabbitmq
   
   rabbitmq:
     # hostname: "rabbitmq"
@@ -59,8 +123,57 @@ services:
     networks:
       - webhooks
 
+  elasticsearch:
+    container_name: elasticsearch
+    environment:
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - "discovery.type=single-node"
+    ports:
+      - target: 9200
+        published: 9200
+    volumes:
+      - w-elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - webhooks
+
+  logstash:
+    container_name: logstash
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+      discovery.seed_hosts: logstash
+      xpack.monitoring.enabled: true
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5000:5000/tcp"
+      - "5000:5000/udp"
+      - "5044:5044"
+      - target: 9600
+        published: 9600
+    networks:
+      - webhooks
+    #volumes:
+      #- ./logstash/pipeline/logstash-nginx.config:/usr/share/logstash/pipeline/logstash-nginx.config
+      #- ./logstash/nginx.log:/home/nginx.log
+    #command: logstash -f /usr/share/logstash/pipeline/logstash-nginx.config
+
+  kibana:
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    ports:
+      - target: 5601
+        published: 5601
+    networks:
+      - webhooks
+  
+
 volumes:
   webhook_mssql_data:
+  w-elasticsearch-data:
   # webhook_data:
 
 networks:
