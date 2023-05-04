@@ -62,29 +62,23 @@ docker-compose -f docker-compose.yml -f docker-compose-override.yml up -d
 
 4. Open the following URL's in your browser
 
-* ** RabbitMQ -> [http://localhost:15672](http://localhost:15672) **username** and **password** = **"guest"**
-
 ![ELK Stack](ELK.png) 
 ![ElasticSearch](Elasticsearch.png)
-
 * **Elk Stack => Kibana URL-> [http://localhost:5601](http://localhost:5601) ,Elastic URL [http://localhost:9200](http://localhost:5601) and Logstash URL [http://localhost:9600](http://localhost:9600)**
 
 ![RabbitMQ](RabbitMQ.png)
-
-* **RabbitMQ URL -> [http://localhost:5601/swagger](http://localhost:5601/swagger)**
+* ** RabbitMQ -> [http://localhost:15672](http://localhost:15672) **username** and **password** = **"guest"**
 
 ![AirlineAPI](airline_api.png)
-
 * **AirlineAPI URL -> [http://localhost:7000/swagger](http://localhost:7000/swagger)**
 
 ![TravelAgentAPI](travel_agent.png)
-
 * **TravelAgentAPI URL -> [http://localhost:7003/swagger](http://localhost:7003/swagger)**
 
 ![Docker containers](docker_containers.png)
+* **Docker container** 
 
 ![Frontend](frontend.png)
-
 * **Frontend URL -> [http://localhost:4200](http://localhost:4200)**
 
 ## Author
