@@ -137,6 +137,27 @@ services:
     networks:
       - webhooks
 
+  logstash:
+    container_name: logstash
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+      discovery.seed_hosts: logstash
+      xpack.monitoring.enabled: true
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5000:5000/tcp"
+      - "5000:5000/udp"
+      - "5044:5044"
+      - target: 9600
+        published: 9600
+    networks:
+      - webhooks
+    #volumes:
+      #- ./logstash/pipeline/logstash-nginx.config:/usr/share/logstash/pipeline/logstash-nginx.config
+      #- ./logstash/nginx.log:/home/nginx.log
+    #command: logstash -f /usr/share/logstash/pipeline/logstash-nginx.config
+
   kibana:
     container_name: kibana
     environment:
