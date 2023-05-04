@@ -23,13 +23,13 @@ namespace Shared
             .WriteTo.Console()
             .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(eleasticUri))
             {
-                IndexFormat = $"applogs-{Assembly.GetExecutingAssembly().GetName().Name.ToLower().Replace(".", "-")}-{context.HostingEnvironment.EnvironmentName?.ToLower().Replace(".", "-")}-logs-{DateTime.UtcNow:yyyy-MM}",
+                IndexFormat = $"applogs-{context.Configuration.GetSection("App")["name"]}-{Assembly.GetExecutingAssembly().GetName().Name.ToLower().Replace(".", "-")}-{context.HostingEnvironment.EnvironmentName?.ToLower().Replace(".", "-")}-logs-{DateTime.UtcNow:yyyy-MM}",
                 AutoRegisterTemplate = true,
                 OverwriteTemplate = true,
                 AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv7,
                 TypeName = null,
                 BatchAction = ElasticOpType.Create,
-                TemplateName = "DroneApi",
+                TemplateName = "Webhook",
                 NumberOfReplicas = 1,
                 NumberOfShards = 2
             })

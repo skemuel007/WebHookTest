@@ -24,9 +24,9 @@
       <div class="form-group">
         <label for="webhookType">Webhook Type</label>
         <select class="form-control" id="webhookType" formControlName="webhookType">
-          <option [selected]="true" [value]="1">Price Change</option>
-          <option [value]="2">Seat Availability</option>
-          <option [value]="3">Flight Delays & Disruption</option>
+          <option [selected]="true" [value]="priceChange">Price Change</option>
+          <option [value]="seatAvailability">Seat Availability</option>
+          <option [value]="flightDelayDisruption">Flight Delays & Disruption</option>
         </select>
         <div *ngIf="(webhookFormGroup.get('webhookType')?.dirty || webhookFormGroup.get('webhookType')?.touched)
                 && webhookFormGroup.get('webhookType')?.errors" class="alert alert-danger">

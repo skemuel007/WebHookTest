@@ -4,6 +4,7 @@ using RabbitMQ.Client.Events;
 using System.Text.Json;
 using System.Text;
 using System.Threading.Channels;
+using AirlineSendAgentWorker.Dtos;
 
 namespace AirlineSendAgentWorker;
 

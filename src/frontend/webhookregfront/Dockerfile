@@ -1,17 +1,18 @@
 # Build the app
 FROM node:18.15.0-alpine3.17 as build
 WORKDIR /src
-COPY ./eltrello-client/package.json ./eltrello-client/package-lock.json ./
-COPY ./eltrello-client .
+COPY ./src/frontend/webhookregfront/package.json ./
+COPY ./src/frontend/webhookregfront/package-lock.json ./
+COPY ./src/frontend/webhookregfront .
 RUN npm install
 ARG configuration=production
 RUN npm run build --prod
 
 # Deploy the app
 FROM nginx:1.23.4-alpine
-COPY --from=build /src/dist/eltrello-client /usr/share/nginx/html
-COPY ./eltrello-client/nginx-custom.conf /etc/nginx/conf.d/default.conf
-COPY ./eltrello-client/env.sh ./
+COPY --from=build /src/dist/web-hook-reg-front /usr/share/nginx/html
+COPY ./src/frontend/webhookregfront/nginx-custom.conf /etc/nginx/conf.d/default.conf
+COPY ./src/frontend/webhookregfront/env.sh ./
 
 RUN chmod +x env.sh
 ENTRYPOINT [ "sh", "/env.sh" ]

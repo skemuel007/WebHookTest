@@ -19,7 +19,12 @@ export class WebookRegistrationPageComponent implements  OnInit{
     webhookUri: ['', Validators.required],
     webhookType: ['', Validators.required]
   });
+
   loading = false;
+  priceChange: string | null = "priceChange";
+  seatAvailability: string | null = "seatAvailability";
+  flightDelayDisruption: string | null = "flightDelayDisruption";
+
   constructor(
     private fb: FormBuilder,
     public webhookService: WebhookRegistrationService,

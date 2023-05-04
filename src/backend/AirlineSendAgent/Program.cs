@@ -8,6 +8,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Extensions.Logging;
+using Serilog.Sinks.Elasticsearch;
+using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
+using System.Reflection;
+using AirlineSendAgent.Client;
 
 namespace AirlineSendAgent
 {
@@ -42,10 +46,17 @@ namespace AirlineSendAgent
                 .MinimumLevel.Information()
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
-                .WriteTo.Elasticsearch(new Serilog.Sinks.Elasticsearch.ElasticsearchSinkOptions(new Uri(elasticSearchUrl))
+                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticSearchUrl))
                 {
+                    IndexFormat = $"applogs-SendAgentWorker-{Assembly.GetExecutingAssembly().GetName().Name.ToLower().Replace(".", "-")}-{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")?.ToLower().Replace(".", "-")}-logs-{DateTime.UtcNow:yyyy-MM}",
                     AutoRegisterTemplate = true,
-                    IndexFormat = "AirlineSendAgent-{0:yyyy.MM.dd}"
+                    OverwriteTemplate = true,
+                    AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv7,
+                    TypeName = null,
+                    BatchAction = ElasticOpType.Create,
+                    TemplateName = "Webhook",
+                    NumberOfReplicas = 1,
+                    NumberOfShards = 2
                 }).CreateLogger();
             // documentation generic host builder
             // var host = HostBuilder()
@@ -64,6 +75,8 @@ namespace AirlineSendAgent
                     services.AddSingleton(rabbitMQConfig);
                     services.AddSingleton<Serilog.ILogger>(Log.Logger);
                     services.AddSingleton<IAppHost, AppHost>();
+                    services.AddSingleton<IWebhookClient, WebhookClient>();
+                    services.AddHttpClient();
 
                     // services.AddLogging();
 

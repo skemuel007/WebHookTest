@@ -3,7 +3,8 @@ version: '3.4'
 services:
 
   webfront:
-    build: ./src/frontend/webhookregfront/
+    # build: ./src/frontend/webhookregfront/
+    # build: #./src/frontend/webhookregfront/
        # context: . 
        # dockerfile: ./src/frontend/webhookregfront/Dockerfile
     environment:
@@ -27,6 +28,7 @@ services:
       - "RabbitMQ:Port=5672"
       - "RabbitMQ:Host=rabbitmq"
       - "RabbitMQ:Exchange=trigger"
+      - "App:Name=AirlineAPI"
     ports:
       - "7000:80"
       # - "443"
@@ -39,6 +41,7 @@ services:
       - mssql
       - elasticsearch
       - kibana
+      - rabbitmq
 
   travelagentapi:
     environment:
@@ -52,6 +55,7 @@ services:
       - "RabbitMQ:Port=5672"
       - "RabbitMQ:Host=rabbitmq"
       - "RabbitMQ:Exchange=trigger"
+      - "App:Name=TravelAgentAPI"
     ports:
       - "7003:80"
       # - "443"
@@ -64,6 +68,7 @@ services:
       - mssql
       - elasticsearch
       - kibana
+      - rabbitmq
 
   airlinesendagent:
     environment:
@@ -77,6 +82,7 @@ services:
       - "RabbitMQ:Port=5672"
       - "RabbitMQ:Host=rabbitmq"
       - "RabbitMQ:Exchange=trigger"
+      - "App:Name=SendAgentWorker"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
@@ -86,6 +92,7 @@ services:
       - mssql
       - elasticsearch
       - kibana
+      - rabbitmq
   
   rabbitmq:
     # hostname: "rabbitmq"

@@ -20,6 +20,14 @@ services:
       context: .
       dockerfile: src/backend/TravelAgentAPI/Dockerfile
 
+
+  webfront:
+    image: ${DOCKER_REGISTRY-}webfront
+    # build: ./src/frontend/webhookregfront/
+    build:
+       context: . 
+       dockerfile: ./src/frontend/webhookregfront/Dockerfile
+
   rabbitmq:
     # image: rabbitmq:3-management
     image: rabbitmq:3-management-alpine
