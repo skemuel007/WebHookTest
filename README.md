@@ -9,7 +9,7 @@ When the wehbook is setup the application sends the notication ("The Sender") in
 ## High Level Architecture
 
 ![ELK Stack](ELK.png)
-![Webook Architecture - Copied]("Webhook Architecture".png)
+![Webook Architecture - Copied](Webhook%20Architecture.png)
 
 ### System Requirements
 
