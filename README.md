@@ -52,3 +52,21 @@ The following tools are required:
 * [Postman]() - not necessary as api's are configured to show swagger, but can still be used based on personl preference.
 
 ## Project Setup
+
+1. Clone the repository
+2. Open the root folder of the project in a terminal
+3. Run the following commands to run all applications as docker containers
+
+```js
+docker-compose -f docker-compose.yml -f docker-compose-override.yml up -d
+```
+
+4. Open the following URL's in your browser
+
+* ** RabbitMQ -> [http://localhost:15672](http://localhost:15672) **username** and **password** = **"guest"**
+
+![RabbitMQ](RabbitMQ.png)
+
+## Author
+
+- Stanley-Kemuel Salvation, Lloyd - [@skemuel007](https://www.github.com/skemuel007) - Software Engineer
